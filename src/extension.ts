@@ -10,9 +10,9 @@ export function activate(context: vscode.ExtensionContext) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "git-stuff" is now active!');
-	const currentFile = vscode.window.activeTextEditor?.document.fileName.split('/').pop() ?? "no active editor";
-	const workspaceDirectory = vscode.workspace.workspaceFolders?.[0].uri.fsPath ?? "no workspace";
-	const cursorLine = vscode.window.activeTextEditor?.selection.active.line ?? 1;
+	const currentFile = getCurrentFile();
+	const workspaceDirectory = getWorkspaceDirectory();
+	const cursorLine = getCursorLine();
 
 
 	console.table([
@@ -39,11 +39,32 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(disposable);
 
-	const lineBlame = git.getGitLineBlame(workspaceDirectory, currentFile, cursorLine + 1);
+	let lineBlame = git.getGitLineBlame(workspaceDirectory, currentFile, cursorLine);
 	console.log("lineBlame: " + lineBlame);
 
 	vscode.window.showInformationMessage(lineBlame);
 
+	setInterval(() => {
+		const currentFile = getCurrentFile();
+		const workspaceDirectory = getWorkspaceDirectory();
+		const cursorLine = getCursorLine();
+		let lineBlame = git.getGitLineBlame(workspaceDirectory, currentFile, cursorLine);
+		console.log("lineBlame: " + lineBlame + ", cursorLine: " + cursorLine);
+	}, 1000);
+
+
+}
+
+function getCurrentFile() {
+	return vscode.window.activeTextEditor?.document.fileName.split('/').pop() ?? "no active editor";
+}
+
+function getWorkspaceDirectory() {
+	return vscode.workspace.workspaceFolders?.[0].uri.fsPath ?? "no workspace";
+}
+
+function getCursorLine() {
+	return (vscode.window.activeTextEditor?.selection.active.line ?? 0) + 1;
 }
 
 // This method is called when your extension is deactivated
