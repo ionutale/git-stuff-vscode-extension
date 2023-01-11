@@ -2,57 +2,39 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as git from './git';
+import { CodelensProvider } from './CodelensProvider';
+import { Disposable } from 'vscode';
+
+let disposables: Disposable[] = [];
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "git-stuff" is now active!');
-	const currentFile = getCurrentFile();
-	const workspaceDirectory = getWorkspaceDirectory();
-	const cursorLine = getCursorLine();
+	// const codelensProvider = new CodelensProvider();
+	// vscode.languages.registerCodeLensProvider("*", codelensProvider);
 
+	vscode.languages.registerCodeActionsProvider("*", {
+		provideCodeActions(document, range, context, token) {
+			disposables.forEach(item => item.dispose());
+			disposables = [];
+			
+			const actions = [];
+			actions.push(new vscode.CodeAction("Action 1", vscode.CodeActionKind.QuickFix));
+			actions.push(new vscode.CodeAction("Action 2", vscode.CodeActionKind.QuickFix));
+			console.log("provideCodeActions", document, range, context, token);
+			let blame = getBlameForLine(
+				getWorkspaceDirectory(),
+				document.fileName.split('/').pop() ?? "no active editor",
+				range.start.line + 1
+			);
 
-	console.table([
-		{
-			name: "Workspace Directory",
-			value: workspaceDirectory
-		},
-		{
-			name: "Cursor Is On Line",
-			value: cursorLine
-		},
-		{
-			name: "Active File",
-			value: currentFile
-		}]);
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('git-stuff.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World vs-code!');
+			const codelensProvider = new CodelensProvider(range.start.line, blame);
+			const disp = vscode.languages.registerCodeLensProvider("*", codelensProvider);
+			disposables.push(disp);
+			return actions;
+		}
 	});
-
-	context.subscriptions.push(disposable);
-
-	let lineBlame = git.getGitLineBlame(workspaceDirectory, currentFile, cursorLine);
-	console.log("lineBlame: " + lineBlame);
-
-	vscode.window.showInformationMessage(lineBlame);
-
-	setInterval(() => {
-		const currentFile = getCurrentFile();
-		const workspaceDirectory = getWorkspaceDirectory();
-		const cursorLine = getCursorLine();
-		let lineBlame = git.getGitLineBlame(workspaceDirectory, currentFile, cursorLine);
-		console.log("lineBlame: " + lineBlame + ", cursorLine: " + cursorLine);
-	}, 1000);
-
-
 }
 
 function getCurrentFile() {
@@ -67,5 +49,16 @@ function getCursorLine() {
 	return (vscode.window.activeTextEditor?.selection.active.line ?? 0) + 1;
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() { }
+function getBlameForLine(workspaceDirectory: string, currentFile: string, cursorLine: number): string {
+		let lineBlame = git.getGitLineBlame(workspaceDirectory, currentFile, cursorLine);
+		console.log("lineBlame: " + lineBlame + ", cursorLine: " + cursorLine);
+		return lineBlame;
+}
+
+// this method is called when your extension is deactivated
+export function deactivate() {
+	if (disposables) {
+		disposables.forEach(item => item.dispose());
+	}
+	disposables = [];
+}
