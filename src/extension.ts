@@ -68,51 +68,16 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	}, null, context.subscriptions);
 
-	// updateDecorations(); on cursor move
-
 	vscode.window.onDidChangeTextEditorSelection(event => {
 		if (activeEditor && event.textEditor === activeEditor) {
 			updateDecorations();
 		}
 	}, null, context.subscriptions);
 
-
-
-	// vscode.languages.registerCodeActionsProvider("*", {
-	// 	provideCodeActions(document, range, context, token) {
-	// 		disposables.forEach(item => item.dispose());
-	// 		disposables = [];
-
-	// 		const actions = [];
-	// 		actions.push(new vscode.CodeAction("Action 1", vscode.CodeActionKind.QuickFix));
-	// 		actions.push(new vscode.CodeAction("Action 2", vscode.CodeActionKind.QuickFix));
-	// 		console.log("provideCodeActions", document, range, context, token);
-	// 		let blame = getBlameForLine(
-	// 			getWorkspaceDirectory(),
-	// 			document.fileName.split('/').pop() ?? "no active editor",
-	// 			range.start.line + 1
-	// 		);
-
-	// 		const codelensProvider = new CodelensProvider(range.start.line, blame);
-	// 		const disp = vscode.languages.registerCodeLensProvider("*", codelensProvider);
-	// 		disposables.push(disp);
-	// 		return actions;
-	// 	}
-	// });
-
-
-}
-
-function getCurrentFile() {
-	return vscode.window.activeTextEditor?.document.fileName.split('/').pop() ?? "no active editor";
 }
 
 function getWorkspaceDirectory() {
 	return vscode.workspace.workspaceFolders?.[0].uri.fsPath ?? "no workspace";
-}
-
-function getCursorLine() {
-	return (vscode.window.activeTextEditor?.selection.active.line ?? 0) + 1;
 }
 
 function getBlameForLine(workspaceDirectory: string, currentFile: string, cursorLine: number): string {
