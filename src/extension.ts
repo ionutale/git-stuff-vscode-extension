@@ -12,7 +12,15 @@ let disposables: Disposable[] = [];
 export function activate(context: vscode.ExtensionContext) {
 
 	let activeEditor = vscode.window.activeTextEditor;
-
+	const gitBlameText = vscode.window.createTextEditorDecorationType(
+		{
+			after: {
+				color: 'gray',
+				margin: '0 0 0 3em'
+			}
+		}
+	);
+	
 	function updateDecorations() {
 		if (!activeEditor) {
 			return;
@@ -38,15 +46,6 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 			}
 		};
-
-		const gitBlameText = vscode.window.createTextEditorDecorationType(
-			{
-				after: {
-					color: 'gray',
-					margin: '0 0 0 3em'
-				}
-			}
-		);
 
 		activeEditor.setDecorations(gitBlameText, [decoration]);
 	}
