@@ -2,6 +2,11 @@
   "name": "git-stuff",
   "displayName": "git-stuff",
   "description": "boost developer experience with some easy to use git options",
+  "publisher": "ionutale",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ionutale/git-stuff-vscode-extension"
+  },
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.74.0"
