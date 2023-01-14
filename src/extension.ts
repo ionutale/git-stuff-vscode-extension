@@ -33,7 +33,7 @@ export function activate(context: vscode.ExtensionContext) {
 		const endOfLinePositionWithOffset = new vscode.Position(cursorLine, endOfLine.character);
 
 		const lineBlameMessage = getBlameForLine(getWorkspaceDirectory(), activeEditor.document.fileName.split('/').pop() ?? "no active editor", cursorLine + 1);
-		console.log("lineBlameMessage: ", lineBlameMessage);
+
 		const decoration: vscode.DecorationOptions = {
 			range: new vscode.Range(endOfLinePosition, endOfLinePositionWithOffset),
 			hoverMessage: 'Blame: ',
@@ -80,7 +80,6 @@ function getWorkspaceDirectory() {
 
 function getBlameForLine(workspaceDirectory: string, currentFile: string, cursorLine: number): string {
 	let lineBlame = git.getGitLineBlame(workspaceDirectory, currentFile, cursorLine);
-	console.log("lineBlame: " + lineBlame + ", cursorLine: " + cursorLine);
 	return lineBlame;
 }
 
