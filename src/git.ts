@@ -9,19 +9,24 @@ import * as cp from 'child_process';
 	*/
   
 export function getGitLineBlame(workspacePath: string, filePath: string, line: number): string {
-  const gitBlameCommand = `git blame -L ${line},${line} ${filePath}`;
-  const gitBlameOutput = cp.execSync(gitBlameCommand,
-    { cwd: workspacePath}
-    ).toString();
-  const gitBlameLineHash = gitBlameOutput.split(' ')[0];
-
-
-  const gitShowCommand = `git show -s --format="%an,%at,%s" ${gitBlameLineHash}`;
-  const gitShowOutput = cp.execSync(gitShowCommand,
-    { cwd: workspacePath}
-    ).toString();
-    // console.log(gitShowOutput);
-  const gitBlameLine = gitShowOutput;
-
-  return gitBlameLine ?? '';
+  try {
+    
+    const gitBlameCommand = `git blame -L ${line},${line} ${filePath}`;
+    const gitBlameOutput = cp.execSync(gitBlameCommand,
+      { cwd: workspacePath}
+      ).toString();
+      const gitBlameLineHash = gitBlameOutput.split(' ')[0];
+      
+      
+      const gitShowCommand = `git show -s --format="%an,%at,%s" ${gitBlameLineHash}`;
+      const gitShowOutput = cp.execSync(gitShowCommand,
+        { cwd: workspacePath}
+        ).toString();
+        // console.log(gitShowOutput);
+        const gitBlameLine = gitShowOutput;
+        
+        return gitBlameLine ?? '';
+      } catch (error) {
+        return 'modified by you';
+      }
 }
