@@ -1,17 +1,23 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
 import * as git from './git';
-import { Disposable } from 'vscode';
+import { Disposable,
+	ExtensionContext,
+	window,
+	workspace,
+	Position,
+	Range,
+	DecorationOptions,
+ } from 'vscode';
 
 let disposables: Disposable[] = [];
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: ExtensionContext) {
 
-	let activeEditor = vscode.window.activeTextEditor;
-	const gitBlameText = vscode.window.createTextEditorDecorationType(
+	let activeEditor = window.activeTextEditor;
+	const gitBlameText = window.createTextEditorDecorationType(
 		{
 			after: {
 				color: 'gray',
@@ -29,13 +35,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// get position at the end of the line
 		const endOfLine = activeEditor.document.lineAt(cursorLine).range.end;
-		const endOfLinePosition = new vscode.Position(cursorLine, endOfLine.character);
-		const endOfLinePositionWithOffset = new vscode.Position(cursorLine, endOfLine.character);
+		const endOfLinePosition = new Position(cursorLine, endOfLine.character);
+		const endOfLinePositionWithOffset = new Position(cursorLine, endOfLine.character);
 
 		const lineBlameMessage = getBlameForLine(getWorkspaceDirectory(), activeEditor.document.fileName.split('/').pop() ?? "no active editor", cursorLine + 1);
 
-		const decoration: vscode.DecorationOptions = {
-			range: new vscode.Range(endOfLinePosition, endOfLinePositionWithOffset),
+		const decoration: DecorationOptions = {
+			range: new Range(endOfLinePosition, endOfLinePositionWithOffset),
 			hoverMessage: 'Blame: ',
 			renderOptions: {
 				after: {
@@ -53,20 +59,20 @@ export function activate(context: vscode.ExtensionContext) {
 		updateDecorations();
 	}
 
-	vscode.window.onDidChangeActiveTextEditor(editor => {
+	window.onDidChangeActiveTextEditor(editor => {
 		activeEditor = editor;
 		if (editor) {
 			updateDecorations();
 		}
 	}, null, context.subscriptions);
 
-	vscode.workspace.onDidChangeTextDocument(event => {
+	workspace.onDidChangeTextDocument(event => {
 		if (activeEditor && event.document === activeEditor.document) {
 			updateDecorations();
 		}
 	}, null, context.subscriptions);
 
-	vscode.window.onDidChangeTextEditorSelection(event => {
+	window.onDidChangeTextEditorSelection(event => {
 		if (activeEditor && event.textEditor === activeEditor) {
 			updateDecorations();
 		}
@@ -75,7 +81,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function getWorkspaceDirectory() {
-	return vscode.workspace.workspaceFolders?.[0].uri.fsPath ?? "no workspace";
+	return workspace.workspaceFolders?.[0].uri.fsPath ?? "no workspace";
 }
 
 function getBlameForLine(workspaceDirectory: string, currentFile: string, cursorLine: number): string {

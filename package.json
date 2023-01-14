@@ -16,7 +16,10 @@
     "SCM Providers"
   ],
   "activationEvents": [
-    "*"
+    "onStartupFinished",
+    "onCommand:git-stuff.git-stuff",
+    "onWorkspaceContains:**/.*",
+    "onWorkspaceContains:**/**.*"
   ],
   "main": "./out/extension.js",
   "contributes": {
