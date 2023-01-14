@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as git from './git';
-import { Disposable,
+import {
 	ExtensionContext,
 	window,
 	workspace,
@@ -10,7 +10,6 @@ import { Disposable,
 	DecorationOptions,
  } from 'vscode';
 
-let disposables: Disposable[] = [];
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -87,12 +86,4 @@ function getWorkspaceDirectory() {
 function getBlameForLine(workspaceDirectory: string, currentFile: string, cursorLine: number): string {
 	let lineBlame = git.getGitLineBlame(workspaceDirectory, currentFile, cursorLine);
 	return lineBlame;
-}
-
-// this method is called when your extension is deactivated
-export function deactivate() {
-	if (disposables) {
-		disposables.forEach(item => item.dispose());
-	}
-	disposables = [];
 }
