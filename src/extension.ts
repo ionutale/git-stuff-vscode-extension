@@ -3,7 +3,6 @@
 import * as vscode from 'vscode';
 import * as git from './git';
 import { Disposable } from 'vscode';
-import { text } from 'stream/consumers';
 
 let disposables: Disposable[] = [];
 
@@ -20,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		}
 	);
-	
+
 	function updateDecorations() {
 		if (!activeEditor) {
 			return;
