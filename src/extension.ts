@@ -37,7 +37,10 @@ export function activate(context: ExtensionContext) {
 		const endOfLinePosition = new Position(cursorLine, endOfLine.character);
 		const endOfLinePositionWithOffset = new Position(cursorLine, endOfLine.character);
 
-		const lineBlameMessage = getBlameForLine(getWorkspaceDirectory(), activeEditor.document.fileName.split('/').pop() ?? "no active editor", cursorLine + 1);
+		const lineBlameMessage = getBlameForLine(
+			getWorkspaceDirectory(), 
+			activeEditor.document.uri.fsPath.replace(getWorkspaceDirectory(), ''),
+			cursorLine + 1);
 
 		const decoration: DecorationOptions = {
 			range: new Range(endOfLinePosition, endOfLinePositionWithOffset),
