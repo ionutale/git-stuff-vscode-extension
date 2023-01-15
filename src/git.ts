@@ -41,20 +41,21 @@ function millisecondsToRelativeTime(milliseconds: number): string {
   const HOURS = 3600000;
   const MINUTES = 60000;
 
+  const diff = new Date().getTime() - milliseconds;
 
   switch (true) {
-    case milliseconds > YEARS:
-      return `${Math.floor(milliseconds / YEARS)} years`;
-    case milliseconds > MONTHS:
-      return `${Math.floor(milliseconds / MONTHS)} months`;
-    case milliseconds > DAYS:
-      return `${Math.floor(milliseconds / DAYS)} days`;
-    case milliseconds > HOURS:
-      return `${Math.floor(milliseconds / HOURS)} hours`;
-    case milliseconds > MINUTES:
-      return `${Math.floor(milliseconds / MINUTES)} minutes`;
+    case diff > YEARS:
+      return `${Math.floor(diff / YEARS)} years`;
+    case diff > MONTHS:
+      return `${Math.floor(diff / MONTHS)} months`;
+    case diff > DAYS:
+      return `${Math.floor(diff / DAYS)} days`;
+    case diff > HOURS:
+      return `${Math.floor(diff / HOURS)} hours`;
+    case diff > MINUTES:
+      return `${Math.floor(diff / MINUTES)} minutes`;
     default:
-      return `${milliseconds} seconds`;
+      return `${diff} seconds`;
   }
 }
 
