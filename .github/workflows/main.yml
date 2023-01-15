@@ -12,6 +12,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 16.17.1
+          build_pkg: yes
       - run: npm ci
       - name: vsce publish
         # You may pin to the exact commit or the version.
