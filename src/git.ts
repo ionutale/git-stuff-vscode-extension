@@ -23,12 +23,36 @@ export function getGitLineBlame(workspacePath: string, filePath: string, line: n
     ).toString();
     // console.log(gitShowOutput);
     const [name, epoch, message] = gitShowOutput.split(',');
-    const relativeTime = epochToRelativeTime(Number(epoch));
+    const relativeTime = millisecondsToRelativeTime(Number(epoch));
     const gitBlameLine = `${name}, ${relativeTime} ago: ${message}`;
 
     return gitBlameLine ?? '';
   } catch (error) {
     return 'uncommited line';
+  }
+}
+
+function millisecondsToRelativeTime(milliseconds: number): string {
+  const YEARS = 31536000000;
+  const MONTHS = 2592000000;
+  const DAYS = 86400000;
+  const HOURS = 3600000;
+  const MINUTES = 60000;
+
+
+  switch (true) {
+    case milliseconds > YEARS:
+      return `${Math.floor(milliseconds / YEARS)} years`;
+    case milliseconds > MONTHS:
+      return `${Math.floor(milliseconds / MONTHS)} months`;
+    case milliseconds > DAYS:
+      return `${Math.floor(milliseconds / DAYS)} days`;
+    case milliseconds > HOURS:
+      return `${Math.floor(milliseconds / HOURS)} hours`;
+    case milliseconds > MINUTES:
+      return `${Math.floor(milliseconds / MINUTES)} minutes`;
+    default:
+      return `${milliseconds} seconds`;
   }
 }
 
