@@ -28,6 +28,7 @@ export function getGitLineBlame(workspacePath: string, filePath: string, line: n
 
     return gitBlameLine ?? '';
   } catch (error) {
+    console.log(error);
     return 'uncommited line';
   }
 }
