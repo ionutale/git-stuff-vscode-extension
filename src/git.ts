@@ -10,6 +10,7 @@ git terminal commands:
 
 export function getGitLineBlame(workspacePath: string, filePath: string, line: number): string {
   try {
+    console.log('getGitLineBlame', workspacePath, filePath, line)
 
     const gitBlameCommand = `git blame -L ${line},${line} ${filePath}`;
     const gitBlameOutput = cp.execSync(gitBlameCommand,
