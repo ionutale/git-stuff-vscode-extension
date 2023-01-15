@@ -39,7 +39,7 @@ export function activate(context: ExtensionContext) {
 
 		const lineBlameMessage = getBlameForLine(
 			getWorkspaceDirectory(), 
-			activeEditor.document.uri.fsPath.replace(getWorkspaceDirectory(), ''),
+			activeEditor.document.uri.fsPath,
 			cursorLine + 1);
 
 		const decoration: DecorationOptions = {

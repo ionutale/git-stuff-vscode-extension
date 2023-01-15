@@ -40,8 +40,9 @@ function millisecondsToRelativeTime(milliseconds: number): string {
   const DAYS = 86400000;
   const HOURS = 3600000;
   const MINUTES = 60000;
-
-  const diff = new Date().getTime() - milliseconds;
+  
+  const diff = Date.now() - milliseconds * 1000;
+  console.log('millisecondsToRelativeTime', milliseconds * 1000, Date.now(),  Date.now() - milliseconds * 1000);
 
   switch (true) {
     case diff > YEARS:
