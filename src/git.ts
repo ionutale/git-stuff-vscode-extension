@@ -1,6 +1,4 @@
 import * as cp from 'child_process';
-import { format, formatDistance, formatRelative, subDays } from 'date-fns'
-
 
 /*
 git terminal commands:
@@ -35,7 +33,26 @@ export function getGitLineBlame(workspacePath: string, filePath: string, line: n
 }
 
 function epochToRelativeTime(epoch: number): string {
-  const date = new Date(epoch * 1000);
-  const relativeTime = formatDistance(date, new Date());
-  return relativeTime;
+  const YEARS = 31536000;
+  const MONTHS = 2592000;
+  const DAYS = 86400;
+  const HOURS = 3600;
+  const MINUTES = 60;
+
+  const seconds = Math.floor((new Date().getTime() - epoch * 1000) / 1000);
+
+  switch (true) {
+    case seconds > YEARS:
+      return `${Math.floor(seconds / YEARS)} years`;
+    case seconds > MONTHS:
+      return `${Math.floor(seconds / MONTHS)} months`;
+    case seconds > DAYS:
+      return `${Math.floor(seconds / DAYS)} days`;
+    case seconds > HOURS:
+      return `${Math.floor(seconds / HOURS)} hours`;
+    case seconds > MINUTES:
+      return `${Math.floor(seconds / MINUTES)} minutes`;
+    default:
+      return `${seconds} seconds`;
+  }
 }
