@@ -21,18 +21,19 @@
     "onWorkspaceContains:**/.*",
     "onWorkspaceContains:**/**.*"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "commands": []
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "release": "npm version patch && git push --follow-tags",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "vscode:prepublish": "npm run package",
+    "webpack": "webpack --mode development",
+    "webpack-dev": "webpack --mode development --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "test-compile": "tsc -p ./"
+  },
+  "browser":{
+    "child_process": false
   },
   "devDependencies": {
     "@types/glob": "^8.0.0",
@@ -45,7 +46,10 @@
     "eslint": "^8.28.0",
     "glob": "^8.0.3",
     "mocha": "^10.1.0",
+    "moment": "^2.29.4",
+    "ts-loader": "^9.4.2",
     "typescript": "^4.9.3",
-    "moment": "^2.29.4"
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   }
 }
