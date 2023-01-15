@@ -8,7 +8,7 @@
     "url": "https://github.com/ionutale/git-stuff-vscode-extension"
   },
   "icon": "images/icon.png",
-  "version": "0.0.26",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -32,7 +32,7 @@
     "package": "webpack --mode production --devtool hidden-source-map",
     "test-compile": "tsc -p ./"
   },
-  "browser":{
+  "browser": {
     "child_process": false
   },
   "devDependencies": {
