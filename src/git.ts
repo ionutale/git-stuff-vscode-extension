@@ -1,5 +1,5 @@
 import * as cp from 'child_process';
-import * as Moment from 'moment';
+import { format, formatDistance, formatRelative, subDays } from 'date-fns'
 
 
 /*
@@ -26,7 +26,7 @@ export function getGitLineBlame(workspacePath: string, filePath: string, line: n
     // console.log(gitShowOutput);
     const [name, epoch, message] = gitShowOutput.split(',');
     const relativeTime = epochToRelativeTime(Number(epoch));
-    const gitBlameLine = `${name}, ${relativeTime}: ${message}`;
+    const gitBlameLine = `${name}, ${relativeTime} ago: ${message}`;
 
     return gitBlameLine ?? '';
   } catch (error) {
@@ -35,6 +35,7 @@ export function getGitLineBlame(workspacePath: string, filePath: string, line: n
 }
 
 function epochToRelativeTime(epoch: number): string {
-  const moment = Moment.unix(epoch);
-  return moment.fromNow();
+  const date = new Date(epoch * 1000);
+  const relativeTime = formatDistance(date, new Date());
+  return relativeTime;
 }
